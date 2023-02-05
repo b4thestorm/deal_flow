@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -88,10 +93,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    # {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    # {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
+
+#configure DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+# configure Djoser
+DJOSER = {
+    "USER_ID_FIELD": "username"
+}
 
 
 # Internationalization
