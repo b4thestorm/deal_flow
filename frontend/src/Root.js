@@ -1,29 +1,37 @@
 import React from "react";
-import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
+import { createReduxHistoryContext } from "redux-first-history";
+import { HistoryRouter as Router } from "redux-first-history/rr6";
+import { combineReducers } from "redux";
+import { signupReducer } from "./components/signup/SignupReducer";
 import { configureStore } from '@reduxjs/toolkit'
 import { applyMiddleware } from "redux";
 import { routerMiddleware, ConnectedRouter } from "connected-react-router";
-import App from "./App";
-
-import createRootReducer from "./Reducer";
 
 const Root = ({ children, initialState = {} }) => {
-  const history = createBrowserHistory();
-  const middleware = [thunk, routerMiddleware(history)];
+const {
+  createReduxHistory,
+  routerMiddleware,
+  routerReducer
+} = createReduxHistoryContext({ history: createBrowserHistory() });
 
-  const store = configureStore({
-    reducer: createRootReducer(history),
+const store = configureStore({
+  reducer: combineReducers({
+  router: routerReducer,
+  createUser: signupReducer 
+  }),
     preloadedState: initialState,
-    middleware: [...middleware],
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(routerMiddleware),
   });
+  
+  const history = createReduxHistory(store);
 
   return (
     <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <App />
-      </ConnectedRouter>
+      <Router history={history}>
+        {children}
+      </Router>
     </Provider>
   );
 };
